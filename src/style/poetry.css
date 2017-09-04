@@ -1,0 +1,20 @@
+.poetry-word {
+	margin: .25em;
+	padding: 0em;
+	overflow: hidden;
+	font-family: Futura,Trebuchet MS,Arial,sans-serif;
+	color: black;
+}
+
+.poetry-tile {
+	background-color: #ffffff;
+	margin: 0em;
+	padding: 0em;
+	box-shadow: .1em .1em .6em #888888;
+	overflow: hidden;
+}
+
+.poetry-disable {
+	opacity: .4;
+	filter: alpha(opacity=40);
+}
