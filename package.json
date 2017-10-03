@@ -4,7 +4,7 @@
   "description": "Server for welliver(dot)me",
   "main": "/src/index.js",
   "scripts": {
-    "start": "node server"
+    "start": "node --harmony server"
   },
   "repository": {
     "type": "git",

@@ -2,10 +2,10 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var fs = require('fs');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
+var PoetryServer = require('./server/NewPoetryServer')
 
 var namespaceSock = io.of('/poetry');
 
@@ -34,8 +34,16 @@ new WebpackDevServer(webpack(config), {
   console.log('Listening at 0.0.0.0:4200');
 });
 
-/*
 
+pserve = new PoetryServer({socket:namespaceSock});
+
+http.listen(1337, function(){
+  console.log('listening on localhost:1337');
+});
+
+
+
+/*
 function parseWord(inString){
 	var firstSpace = inString.indexOf(' ');
 	var secondSpace = inString.indexOf(' ',firstSpace+1);
@@ -44,26 +52,6 @@ function parseWord(inString){
 	return inString.slice(firstSpace+1, secondSpace);
 }
 
-
-
-pserve = new PoetryServer({socket:namespaceSock});
-
-namespaceSock.on('connection', function(socket){
-	console.log("client connected");
-
-	socket.on('update',function(update){
-	  	if(pserve.hasOwnProperty(update.type)){
-	  		pserve[update.type](update.data,socket);
-	  	};
-	  	console.log(update);
-	});
-});
-
-http.listen(1337, function(){
-  console.log('listening on localhost:1337');
-});
-
-/*
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 

@@ -4,7 +4,7 @@ function Connection(optsIn){
 	optsIn = optsIn || {};
 	optsIn.events = optsIn.events || {};
 	this.server = optsIn.server || './poetry.json';
-	this.namespace = '/twilight';
+	this.namespace = '/poetry';
 	this.websocket = {};
 	this.xhr = {};
 

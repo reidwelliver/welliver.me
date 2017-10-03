@@ -1,25 +1,50 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-
 import ReactGridLayout from 'react-grid-layout';
+
+import Tile from './Tile';
 
 @connect((store) => { return { tiles: store.tiles.tiles } } )
 export default class GridLayout extends Component {
 	constructor(props){
 		super(props)
+		this.state = {
+			emSize: parseFloat(getComputedStyle(document.querySelector('body'))['font-size'])
+		}
 	}
 
 	render(){
-		var emSize = parseFloat(getComputedStyle(document.querySelector('body'))['font-size']);
+
+		var tiles = [
+			{ x: 1, y: 1, word: 'aaaaaaaah'},
+			{ x: 1, y: 3, word: 'bbbbbbh'},
+			{ x: 1, y: 5, word: 'cccch'},
+			{ x: 1, y: 9, word: 'ddh'},
+		]
 
 		return (
-			<ReactGridLayout verticalCompact={false} className="layout" cols={window.innerWidth/10} rowHeight={emSize} height={window.innerHeight} width={window.innerWidth} autoSize={false}>
-				
-
-				<div key="a" data-grid={{ x: 0, y: 0, w: 1, h: 1 }}>a</div>
-				<div key="b" data-grid={{ x: 1, y: 0, w: 3, h: 1 }}>b</div>
-				<div key="c" data-grid={{ x: 4, y: 0, w: 1, h: 1 }}>c</div>
+			<ReactGridLayout
+				verticalCompact={false}
+				className="layout"
+				cols={window.innerWidth}
+				rowHeight={this.state.emSize}
+				height={window.innerHeight}
+				width={window.innerWidth}
+				autoSize={false}
+			>
+				{ tiles.map( (tile, i) => {
+					return <Tile key={i} tile={tile} data-grid={this.tileToDataGrid(tile)}/>
+				} ) }
 			</ReactGridLayout>
 		)
+	}
+
+	tileToDataGrid(tile){
+		return {
+			x: tile.x,
+			y: tile.y,
+			w: tile.word.length,
+			h: 1
+		}
 	}
 }
