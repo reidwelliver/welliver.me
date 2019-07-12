@@ -35,7 +35,7 @@ new WebpackDevServer(webpack(config), {
 });
 
 
-pserve = new PoetryServer({socket:namespaceSock});
+pserve = new PoetryServer( { socket:namespaceSock, writeInterval:-1 } );
 
 http.listen(1337, function(){
   console.log('listening on localhost:1337');

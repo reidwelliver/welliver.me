@@ -5,6 +5,8 @@ class PoetryServer {
 		this.tiles = {};
 		this.dataFile = props.file || './data.json';
 		this.socket = props.socket;
+		this.writeInterval = props.writeInterval;
+
 		this.readData();
 		this.bindMethods();
 
@@ -19,7 +21,9 @@ class PoetryServer {
 			});
 		});
 
-		setInterval(this.writeData,600000);
+		if(this.writeInterval > 0){
+			setInterval(this.writeData,this.writeInterval);
+		}
 	}
 
 	bindMethods(){
