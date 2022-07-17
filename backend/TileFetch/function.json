@@ -1,0 +1,30 @@
+{
+  "bindings": [
+    {
+      "authLevel": "function",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get"
+      ],
+      "route": "fetch"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    },
+    {
+      "name": "inputTileDocuments",
+      "type": "cosmosDB",
+      "databaseName": "welliverme",
+      "collectionName": "tiles",
+      "createIfNotExists": "false",
+      "connectionStringSetting": "CosmosDbConnectionString",
+      "direction": "in",
+      "sqlQuery": "SELECT * from c"
+    }
+  ],
+  "scriptFile": "../dist/TileFetch/index.js"
+}
