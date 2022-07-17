@@ -1,0 +1,42 @@
+{
+  "bindings": [
+    {
+      "authLevel": "function",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "post"
+      ],
+      "route": "update"
+    },
+    {
+      "name": "inputTileDocument",
+      "type": "cosmosDB",
+      "databaseName": "welliverme",
+      "collectionName": "tiles",
+      "createIfNotExists": "false",
+      "connectionStringSetting": "CosmosDbConnectionString",
+      "id" : "{id}",
+      "partitionKey": "{id}",
+      "direction": "in"
+  },
+    {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "outputTileDocument",
+      "databaseName": "welliverme",
+      "collectionName": "tiles",
+      "createIfNotExists": "false",
+      "connectionStringSetting": "CosmosDbConnectionString"
+    },
+    {
+      "type": "signalR",
+      "name": "signalRMessages",
+      "hubName": "serverless",
+      "connectionStringSetting": "AzureSignalRConnectionString",
+      "direction": "out"
+    }
+  ],
+  "scriptFile": "../dist/TileUpdate/index.js"
+}
