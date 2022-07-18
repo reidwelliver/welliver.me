@@ -1,0 +1,123 @@
+
+@import "~react-grid-layout/css/styles.css";
+@import "~react-resizable/css/styles.css";
+
+
+.react-grid-layout {
+	position: relative;
+	flex-grow: 1;
+	overflow: hidden;
+}
+
+.react-grid-item.cssTransforms {
+	transition-property: transform;
+}
+
+.react-grid-item.resizing {
+	z-index: 1;
+	will-change: width, height;
+}
+  
+.react-grid-item.react-draggable-dragging {
+	transition: none;
+	z-index: 3;
+	will-change: transform;
+}
+  
+.react-grid-item.react-grid-placeholder {
+	background: red;
+	opacity: 0.2;
+	transition-duration: 100ms;
+	z-index: 2;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+  
+.react-grid-item > .react-resizable-handle {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	bottom: 0;
+	right: 0;
+	cursor: se-resize;
+}
+  
+.react-grid-item > .react-resizable-handle::after {
+	content: "";
+	position: absolute;
+	right: 3px;
+	bottom: 3px;
+	width: 5px;
+	height: 5px;
+	border-right: 2px solid rgba(0, 0, 0, 0.4);
+	border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+.title-tile {
+	font-family: 'Nunito', sans-serif;
+	box-shadow: none;
+	border: none;
+	justify-content: center;
+	color: rgb(221, 221, 221);
+	background: transparent;
+	font-weight: 200;
+	
+	.funky-title {
+		display: flex;
+		flex-direction: column;
+		padding: 1em;
+	}
+
+	.firstname, .lastname{
+		text-rendering: geometricPrecision;
+		font-size: 6em;
+		line-height: .8em;
+	}
+
+	.firstname {
+		text-align: right;
+	}
+
+	.top-title, .bottom-title {
+		justify-content: space-between;
+	}
+
+	.tiny-title {
+		font-size: 1.75em;
+		text-transform: none;
+		align-self: flex-end;
+		margin-top: 0;
+	}
+
+	.top-title {
+		align-self: start;
+		.tiny-title {
+			margin-left: -.1em;
+		}
+
+	}
+
+	.bottom-title {
+		.tiny-title {
+			display: inline-block;
+			transform: scaleX(-1); 
+			filter: FlipH; /* IE 6-7-8 */
+			margin-right: -.25em;
+		}
+	}
+
+	.top-title, .bottom-title {
+		display: flex;
+		flex-grow: 1;
+		flex-direction: row;
+		justify-content: center;
+		
+	}
+
+	.bottom-title {
+		flex-direction: row-reverse;
+	}
+}
