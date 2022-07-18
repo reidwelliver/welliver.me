@@ -1,6 +1,6 @@
 {
   "name": "@welliver-me/frontend",
-  "version": "1",
+  "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
