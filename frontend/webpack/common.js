@@ -1,20 +1,16 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./index.tsx",
   resolve: {
     modules: [path.join(__dirname, "..", "node_modules")],
     alias: {
-      "@welliver.me/frontend": path.resolve(__dirname, "..", "src"),
+      "@welliver.me": path.join(__dirname, "..", ".."),
     },
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".scss"],
   },
   module: {
     rules: [
-      {
-        test: /\.css$/,
-        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
-      },
       {
         test: /\.(ttf|eot|svg|xlsx|png|jpg|gif|woff)(\?[a-z0-9#=&.]+)?$/,
         use: [{ loader: "file-loader" }],

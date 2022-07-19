@@ -7,19 +7,17 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import getBaseUrl from "../api/getBaseURL";
-import { Tile, TileDataGridProps } from "../types/Tile";
+import getBaseUrl from "@welliver.me/frontend/api/getBaseURL";
+import { Tile, TileDataGridProps } from "@welliver.me/frontend/types/Tile";
 import useWebsocketConnection from "./useWebsocketConnection";
 
 interface TileProviderData {
-  fetchError: string | null;
   fetchingTiles: boolean;
   tiles: Tile[];
   updateTile: (tile: TileDataGridProps) => void;
 }
 
 const defaultState = {
-  fetchError: null,
   fetchingTiles: false,
   tiles: [],
   updateTile: () => {},
@@ -38,7 +36,6 @@ export function TileProvider(props: TileProviderProps) {
 
   const connection = useWebsocketConnection();
 
-  const [fetchError, setFetchError] = useState<string | null>(null);
   const [fetchingTiles, setFetchingTiles] = useState(false);
   const [tiles, setTiles] = useState<Tile[]>([]);
 
@@ -89,12 +86,11 @@ export function TileProvider(props: TileProviderProps) {
 
   const value = useMemo(
     () => ({
-      fetchError,
       fetchingTiles,
       tiles,
       updateTile,
     }),
-    [fetchError, fetchingTiles, tiles, updateTile]
+    [fetchingTiles, tiles, updateTile]
   );
 
   return <TileContext.Provider value={value}>{children}</TileContext.Provider>;

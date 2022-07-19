@@ -2,17 +2,18 @@ import React, {
   createContext,
   PropsWithChildren,
   useContext,
+  useEffect,
   useRef,
 } from "react";
+
 import {
   AbstractWebsocketConnectionConstructor,
   AbstractWebsocketConnection,
-} from "../api/AbstractWebsocketConnection";
-
-import SignalrWebsocketConnection from "../api/SignalrWebsocketConnection";
+} from "@welliver.me/frontend/api/AbstractWebsocketConnection";
+import SignalrWebsocketConnection from "@welliver.me/frontend/api/SignalrWebsocketConnection";
 
 const WebsocketConnectionContext =
-  createContext<AbstractWebsocketConnection>(null);
+  createContext<AbstractWebsocketConnection | null>(null);
 
 export default function useWebsocketConnection() {
   return useContext(WebsocketConnectionContext);
@@ -28,10 +29,14 @@ export function WebsocketConnectionProvider<
   T extends AbstractWebsocketConnectionConstructor
 >(props: WebsocketConnectionProviderProps<T>) {
   const { children, WebsocketProvider = SignalrWebsocketConnection } = props;
-  const connection = useRef(new WebsocketProvider());
+  const connectionRef = useRef(new WebsocketProvider());
+
+  useEffect(() => {
+    connectionRef.current = new WebsocketProvider();
+  }, [connectionRef]);
 
   return (
-    <WebsocketConnectionContext.Provider value={connection.current}>
+    <WebsocketConnectionContext.Provider value={connectionRef.current}>
       {children}
     </WebsocketConnectionContext.Provider>
   );

@@ -12,7 +12,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "development",
-      template: path.resolve("src", "html", "index.prod.html"),
+      template: path.resolve("html", "index.prod.html"),
     }),
     new ForkTsCheckerWebpackPlugin(),
   ],

@@ -45,7 +45,7 @@ function TileComponent(props: TileProps) {
   );
 
   const onDoubleClick = useCallback(() => {
-    onTileClick(id);
+    if (onTileClick) onTileClick(id);
   }, []);
 
   if (animated) {

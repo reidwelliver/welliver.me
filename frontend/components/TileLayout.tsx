@@ -1,9 +1,15 @@
 import React, { useMemo } from "react";
 import ReactGridLayout, { ReactGridLayoutProps } from "react-grid-layout";
 import { withSize } from "react-sizeme";
-import useTiles from "../hooks/useTiles";
-import { TileDataGridProps, tilePropsToDataGridProps } from "../types/Tile";
+
+import useTiles from "@welliver.me/frontend/hooks/useTiles";
+import {
+  TileDataGridProps,
+  tilePropsToDataGridProps,
+} from "@welliver.me/frontend/types/Tile";
+
 import { makeTile } from "./Tile";
+
 import "@welliver.me/frontend/style/GridLayout.scss";
 
 const settings: ReactGridLayoutProps = {
@@ -89,7 +95,9 @@ function TileLayout(props: TileLayoutProps) {
   const width = props.width || window.innerWidth;
   const height = props.height || window.innerHeight;
 
-  let numRows = Math.floor(height / (settings.rowHeight + settings.margin[0]));
+  let numRows = Math.floor(
+    height / (settings.rowHeight! + settings.margin![0])
+  );
 
   const pageTitleChild = useMemo(() => getPageTitle(numRows), [numRows]);
 

@@ -11,7 +11,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "development",
-      template: path.resolve("src", "html", "index.dev.html"),
+      template: path.resolve("html", "index.dev.html"),
     }),
     new ForkTsCheckerWebpackPlugin(),
     new ReactRefreshWebpackPlugin(),

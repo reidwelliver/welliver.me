@@ -1,11 +1,6 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
     "outDir": "dist",
-    "rootDir": ".",
-    "sourceMap": true,
-    "strict": true,
-		"noImplicitAny": true,
-  }
+	}
 }

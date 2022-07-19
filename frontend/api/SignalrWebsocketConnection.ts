@@ -8,11 +8,6 @@ export default class SignalrWebsocketConnection
   _connection: signalR.HubConnection;
 
   constructor() {
-    this._initialize();
-    return this;
-  }
-
-  _initialize() {
     this._connection = new signalR.HubConnectionBuilder()
       .withUrl(getBaseUrl())
       .configureLogging(signalR.LogLevel.Information)
@@ -20,6 +15,7 @@ export default class SignalrWebsocketConnection
 
     this._connection.onclose(() => console.log("disconnected"));
     this._connection.start();
+    return this;
   }
 
   handleMessage(messageType: string, handler: (message: string) => void) {
