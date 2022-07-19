@@ -55,14 +55,11 @@ export function TileProvider(props: TileProviderProps) {
 
   const fetchTiles = useCallback(
     async (force = false) => {
-      console.log("fetching tiles");
       if (force || (!fetchingTiles && !tiles.length)) {
         setFetchingTiles(true);
 
         const tileResponse = await fetch(`${getBaseUrl()}/fetch`);
         const tiles = await tileResponse.json();
-
-        console.log("?!?!?!?!", tiles);
 
         setTiles(tiles);
         setFetchingTiles(false);
@@ -81,7 +78,6 @@ export function TileProvider(props: TileProviderProps) {
     if (connection) {
       connection.handleMessage("tileUpdate", (message) => {
         const newTile = JSON.parse(message);
-        console.log("TILE UPDATE", newTile);
         setTiles((tiles) =>
           tiles.map((t) =>
             t.id === newTile.id ? { ...t, x: newTile.x, y: newTile.y } : t

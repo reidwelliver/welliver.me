@@ -1,4 +1,4 @@
-import "@welliver-me/frontend/style/index.scss";
+import "@welliver.me/frontend/style/index.scss";
 
 import React from "react";
 import { createRoot } from "react-dom/client";

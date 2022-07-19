@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from "react";
 // @ts-ignore - TODO: install styled-components definitions
 import styled, { keyframes } from "styled-components";
-import { Tile } from "@welliver-me/frontend/types/Tile";
-import "@welliver-me/frontend/style/Tile.scss";
+import { Tile } from "@welliver.me/frontend/types/Tile";
+import "@welliver.me/frontend/style/Tile.scss";
 
 const animation = {
   from: {

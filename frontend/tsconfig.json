@@ -12,7 +12,7 @@
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"paths": {
-			"@welliver-me/frontend/*": ["src/*"]
+			"@welliver.me/frontend/*": ["src/*"]
 		}
 	},
 	"exclude": [

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import "@welliver-me/frontend/style/ErrorBoundary.scss";
+import "@welliver.me/frontend/style/ErrorBoundary.scss";
 
 type ErrorBoundaryProps = PropsWithChildren<{}>;
 interface ErrorBroundaryState {

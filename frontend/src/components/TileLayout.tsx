@@ -4,7 +4,7 @@ import { withSize } from "react-sizeme";
 import useTiles from "../hooks/useTiles";
 import { TileDataGridProps, tilePropsToDataGridProps } from "../types/Tile";
 import { makeTile } from "./Tile";
-import "@welliver-me/frontend/style/GridLayout.scss";
+import "@welliver.me/frontend/style/GridLayout.scss";
 
 const settings: ReactGridLayoutProps = {
   className: "layout",
@@ -96,8 +96,6 @@ function TileLayout(props: TileLayoutProps) {
   const onTileClick = (id: string) => {
     console.log("aaaaa", id);
   };
-
-  console.log(tiles);
 
   const layout = useMemo(
     () => [...tiles.map(tilePropsToDataGridProps), pageTitleChild],

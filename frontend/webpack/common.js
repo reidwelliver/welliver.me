@@ -5,7 +5,7 @@ module.exports = {
   resolve: {
     modules: [path.join(__dirname, "..", "node_modules")],
     alias: {
-      "@welliver-me/frontend": path.resolve(__dirname, "..", "src"),
+      "@welliver.me/frontend": path.resolve(__dirname, "..", "src"),
     },
     extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
