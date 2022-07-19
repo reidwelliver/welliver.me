@@ -3,10 +3,7 @@ import ReactGridLayout, { ReactGridLayoutProps } from "react-grid-layout";
 import { withSize } from "react-sizeme";
 
 import useTiles from "@welliver.me/frontend/hooks/useTiles";
-import {
-  TileDataGridProps,
-  tilePropsToDataGridProps,
-} from "@welliver.me/frontend/types/Tile";
+import { TileDataGridProps, tilePropsToDataGridProps } from "@welliver.me/tile";
 
 import { makeTile } from "./Tile";
 

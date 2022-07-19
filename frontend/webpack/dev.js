@@ -26,6 +26,7 @@ module.exports = {
             loader: "babel-loader",
             options: {
               plugins: [require.resolve("react-refresh/babel")],
+              rootMode: "upward",
             },
           },
         ],

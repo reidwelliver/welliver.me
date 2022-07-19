@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 // @ts-ignore - TODO: install styled-components definitions
 import styled, { keyframes } from "styled-components";
-import { Tile } from "@welliver.me/frontend/types/Tile";
+import { FrontendTile } from "@welliver.me/tile";
 import "@welliver.me/frontend/style/Tile.scss";
 
 const animation = {
@@ -63,6 +63,6 @@ function TileComponent(props: TileProps) {
   );
 }
 
-interface TileProps extends Tile {
+interface TileProps extends FrontendTile {
   onTileClick?: (key: string) => void;
 }

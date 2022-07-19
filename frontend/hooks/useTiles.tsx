@@ -8,12 +8,12 @@ import React, {
   useState,
 } from "react";
 import getBaseUrl from "@welliver.me/frontend/api/getBaseURL";
-import { Tile, TileDataGridProps } from "@welliver.me/frontend/types/Tile";
+import { FrontendTile, TileDataGridProps } from "@welliver.me/tile";
 import useWebsocketConnection from "./useWebsocketConnection";
 
 interface TileProviderData {
   fetchingTiles: boolean;
-  tiles: Tile[];
+  tiles: FrontendTile[];
   updateTile: (tile: TileDataGridProps) => void;
 }
 
@@ -37,7 +37,7 @@ export function TileProvider(props: TileProviderProps) {
   const connection = useWebsocketConnection();
 
   const [fetchingTiles, setFetchingTiles] = useState(false);
-  const [tiles, setTiles] = useState<Tile[]>([]);
+  const [tiles, setTiles] = useState<FrontendTile[]>([]);
 
   const updateTile = useCallback((tile: TileDataGridProps) => {
     fetch(`${getBaseUrl()}/update`, {

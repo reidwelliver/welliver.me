@@ -1,11 +1,13 @@
 const path = require("path");
 
+const TOP_LEVEL_DIRECTORY = path.join(__dirname, "..", "..");
+
 module.exports = {
   entry: "./index.tsx",
   resolve: {
-    modules: [path.join(__dirname, "..", "node_modules")],
+    modules: [TOP_LEVEL_DIRECTORY, path.join(__dirname, "..", "node_modules")],
     alias: {
-      "@welliver.me": path.join(__dirname, "..", ".."),
+      "@welliver.me": TOP_LEVEL_DIRECTORY,
     },
     extensions: [".ts", ".tsx", ".js", ".jsx", ".scss"],
   },
