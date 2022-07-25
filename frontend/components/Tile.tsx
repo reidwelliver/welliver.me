@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from "react";
 // @ts-ignore - TODO: install styled-components definitions
 import styled, { keyframes } from "styled-components";
 import { FrontendTile } from "@welliver.me/tile";
+import customTilesById from "./CustomTiles";
 import "@welliver.me/frontend/style/Tile.scss";
 
 const animation = {
@@ -33,12 +34,14 @@ export function makeTile(tile: TileProps) {
 }
 
 function TileComponent(props: TileProps) {
-  const { id, onTileClick, animated, children, classes } = props;
+  const { id, onTileClick, animated, classes } = props;
+
+  const CustomChildComponent = customTilesById[id];
 
   const AnimatedDiv = useMemo(
     () => styled.div`
-      animation: 1.1s ${bounceAnimation};
-      animation-delay: ${Math.floor(Math.random() * 10) * 0.05}s;
+      animation: 0.9s ${bounceAnimation};
+      animation-delay: ${Math.floor(Math.random() * 10) * 0.15}s;
       animation-fill-mode: both;
     `,
     []
@@ -51,14 +54,22 @@ function TileComponent(props: TileProps) {
   if (animated) {
     return (
       <AnimatedDiv className={`tile ${classes}`} onDoubleClick={onDoubleClick}>
-        {children}
+        {CustomChildComponent ? (
+          <CustomChildComponent {...props} />
+        ) : (
+          <span className="text">{id}</span>
+        )}
       </AnimatedDiv>
     );
   }
 
   return (
     <div className={`tile ${classes}`} onDoubleClick={onDoubleClick}>
-      {children}
+      {CustomChildComponent ? (
+        <CustomChildComponent {...props} />
+      ) : (
+        <span className="text">{id}</span>
+      )}
     </div>
   );
 }

@@ -8,7 +8,12 @@ import React, {
   useState,
 } from "react";
 import getBaseUrl from "@welliver.me/frontend/api/getBaseURL";
-import { FrontendTile, TileDataGridProps } from "@welliver.me/tile";
+import {
+  BackendTile,
+  backendTileToFrontendTile,
+  FrontendTile,
+  TileDataGridProps,
+} from "@welliver.me/tile";
 import useWebsocketConnection from "./useWebsocketConnection";
 
 interface TileProviderData {
@@ -56,9 +61,9 @@ export function TileProvider(props: TileProviderProps) {
         setFetchingTiles(true);
 
         const tileResponse = await fetch(`${getBaseUrl()}/fetch`);
-        const tiles = await tileResponse.json();
+        const tiles = (await tileResponse.json()) as BackendTile[];
 
-        setTiles(tiles);
+        setTiles(tiles.map(backendTileToFrontendTile));
         setFetchingTiles(false);
       }
     },

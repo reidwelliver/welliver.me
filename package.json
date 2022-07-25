@@ -8,11 +8,6 @@
     "./frontend",
     "./tiles"
   ],
-  "resolutions": {
-    "@welliver.me/backend": "./backend",
-    "@welliver.me/frontend": "./frontend",
-    "@welliver.me/tiles": "./tiles"
-  },
   "devDependencies": {
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",

@@ -1,0 +1,23 @@
+.overlay-root {
+  position: absolute;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-family: 'Nunito', sans-serif;
+	text-transform: none;
+}
+
+.overlay-paper {
+  width: 40%;
+  max-height: 80%;
+  background-color: white;
+  opacity: 0.9;
+  color: black;
+  padding: 1em;
+}

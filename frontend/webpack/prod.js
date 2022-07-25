@@ -21,7 +21,14 @@ module.exports = {
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        use: ["babel-loader"],
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              rootMode: "upward",
+            },
+          },
+        ],
       },
       ...common.module.rules,
     ],

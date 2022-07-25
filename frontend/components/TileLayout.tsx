@@ -4,81 +4,34 @@ import { withSize } from "react-sizeme";
 
 import useTiles from "@welliver.me/frontend/hooks/useTiles";
 import { TileDataGridProps, tilePropsToDataGridProps } from "@welliver.me/tile";
-
+import {
+  NUM_TILE_LAYOUT_ROWS,
+  NUM_TILE_LAYOUT_COLS,
+} from "@welliver.me/tile/config";
+import { getTitleTitleConfig } from "./CustomTiles/TitleTile";
 import { makeTile } from "./Tile";
 
 import "@welliver.me/frontend/style/GridLayout.scss";
 
+const MIN_COL_WIDTH_PX = 5;
+const MIN_TOTAL_WIDTH_PX = MIN_COL_WIDTH_PX * NUM_TILE_LAYOUT_COLS;
+
+const MIN_ROW_HEIGHT_PX = 4;
+
 const settings: ReactGridLayoutProps = {
   className: "layout",
-  cols: 100,
+  cols: NUM_TILE_LAYOUT_COLS,
   autoSize: false,
-  rowHeight: 10,
   compactType: null,
   isResizable: false,
   isDraggable: true,
   isBounded: true,
   resizeHandles: [],
   preventCollision: true,
-  margin: [5, 5],
+  margin: [1, 1],
 };
 
-const pageTitleChild = (
-  <div className="funky-title">
-    <div className="top-title">
-      <span className="firstname">R</span>
-      <span className="tiny-title">eid</span>
-    </div>
-    <div className="bottom-title">
-      <span className="lastname">W</span>
-      <span className="tiny-title">elliver</span>
-    </div>
-  </div>
-);
-
-function getPageTitle(numRows: number) {
-  const pageTitleTile = {
-    y: 0,
-    x: 88,
-    w: 12,
-    h: 12,
-    i: "title",
-    id: "title",
-    classes: "title-tile",
-    children: pageTitleChild,
-    static: true,
-    animated: false,
-  };
-
-  pageTitleTile.y = numRows - pageTitleTile.h;
-
-  return pageTitleTile;
-}
-
-// function generateTestLayout(numRows: number) {
-//   const testTiles = new Array(numRows).fill(true).map((item, i) => {
-//     const y = Math.ceil(Math.random() * 4) + 1;
-//     return {
-//       x: (i * 2) % 100,
-//       y: Math.floor(i / 6) * y,
-//       w: 10,
-//       h: 3,
-//       i: i.toString(),
-//       classes: "",
-//       children: <span className="text">Tile {i.toString()}</span>,
-//       animated: true,
-//     };
-//   });
-
-//   return [pageTitleTile, ...testTiles];
-// }
-
-interface TileLayoutProps {
-  height?: number;
-  width?: number;
-}
-
-function TileLayout(props: TileLayoutProps) {
+function TileLayout() {
   const { tiles, updateTile } = useTiles();
 
   const onDragStop = (
@@ -89,33 +42,45 @@ function TileLayout(props: TileLayoutProps) {
     updateTile(newTile);
   };
 
-  const width = props.width || window.innerWidth;
-  const height = props.height || window.innerHeight;
+  // have a standard number of rows and columns
+  // get the width and height of the window
 
-  let numRows = Math.floor(
-    height / (settings.rowHeight! + settings.margin![0])
-  );
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
 
-  const pageTitleChild = useMemo(() => getPageTitle(numRows), [numRows]);
+  const widthScaleFactor = windowWidth / MIN_TOTAL_WIDTH_PX;
+  const calculatedWidth =
+    widthScaleFactor > 1 ? windowWidth : MIN_TOTAL_WIDTH_PX;
 
   const onTileClick = (id: string) => {
     console.log("aaaaa", id);
   };
 
+  const calculatedRowHeight = windowHeight / NUM_TILE_LAYOUT_ROWS;
+  const rowHeight =
+    calculatedRowHeight >= MIN_ROW_HEIGHT_PX
+      ? calculatedRowHeight
+      : MIN_ROW_HEIGHT_PX;
+
+  console.log(rowHeight);
+
+  const titleTileConfig = useMemo(() => getTitleTitleConfig(), []);
+
   const layout = useMemo(
-    () => [...tiles.map(tilePropsToDataGridProps), pageTitleChild],
-    [tiles, pageTitleChild]
+    () => [...tiles.map(tilePropsToDataGridProps), titleTileConfig],
+    [tiles, titleTileConfig]
   );
 
   return (
     <ReactGridLayout
-      onDragStop={onDragStop}
-      width={width}
       {...settings}
+      onDragStop={onDragStop}
+      width={calculatedWidth}
+      rowHeight={rowHeight}
       layout={layout}
     >
       {tiles.map((tile) => makeTile({ ...tile, onTileClick }))}
-      {makeTile(pageTitleChild)}
+      {makeTile(titleTileConfig)}
     </ReactGridLayout>
   );
 }
