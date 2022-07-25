@@ -25,5 +25,5 @@
       "connectionStringSetting": "CosmosDbConnectionString"
     }
   ],
-  "scriptFile": "../dist/TileReseed/index.js"
+  "scriptFile": "../dist/backend/TileReseed/index.js"
 }

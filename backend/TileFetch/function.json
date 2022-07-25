@@ -26,5 +26,5 @@
       "sqlQuery": "SELECT * from c"
     }
   ],
-  "scriptFile": "../dist/TileFetch/index.js"
+  "scriptFile": "../dist/backend/TileFetch/index.js"
 }

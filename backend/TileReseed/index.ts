@@ -1,5 +1,6 @@
 import { AzureFunction, Context } from "@azure/functions";
-import TileSamples from "./TileSamples";
+import { TILES, sparseTilesToBackendTiles } from "@welliver.me/tile";
+
 import recreateContainer from "./recreateContainer";
 
 const tileReseed: AzureFunction = async function (
@@ -9,11 +10,12 @@ const tileReseed: AzureFunction = async function (
 
   await recreateContainer();
 
-  context.bindings.outputTileDocuments = JSON.stringify(TileSamples);
+  const backendTiles = sparseTilesToBackendTiles(TILES);
+
+  context.bindings.outputTileDocuments = JSON.stringify(backendTiles);
 
   context.res = {
-    // status: 200, /* Defaults to 200 */
-    body: JSON.stringify({ tilesSeeded: TileSamples.length }),
+    body: JSON.stringify({ tilesSeeded: backendTiles.length }),
   };
 };
 

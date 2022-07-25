@@ -38,5 +38,5 @@
       "direction": "out"
     }
   ],
-  "scriptFile": "../dist/TileUpdate/index.js"
+  "scriptFile": "../dist/backend/TileUpdate/index.js"
 }
