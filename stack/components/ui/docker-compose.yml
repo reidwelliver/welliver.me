@@ -1,0 +1,16 @@
+services:
+  ui:
+    image: node:22-alpine
+    container_name: welliver-ui
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../../../typescript/ui:/app
+      - ui_node_modules:/app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      - VITE_MQTT_BROKER_URL=ws://localhost:9001/mqtt
+
+volumes:
+  ui_node_modules:

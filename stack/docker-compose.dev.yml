@@ -1,0 +1,3 @@
+include:
+  - components/ui/docker-compose.yml
+  - components/mqtt/docker-compose.yml

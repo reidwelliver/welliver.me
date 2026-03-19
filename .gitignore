@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+target/
+pkg/
+
+# Build output
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rust
+rust/wasm/target/
+rust/wasm/pkg/
+
+# TypeScript
+typescript/ui/node_modules/
+typescript/ui/dist/
+
+# WASM
+*.wasm.d.ts
