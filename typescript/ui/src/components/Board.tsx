@@ -8,15 +8,15 @@ import type {
 import { useMagnetDataStore } from "../stores/magnetDataStore";
 import { useMagnetPositionStore } from "../stores/magnetPositionStore";
 import { useScale } from "../hooks/useScale";
-import { useWasm, getWasmStore } from "../hooks/useWasm";
+import { useWasm } from "../hooks/useWasm";
 import { Magnet } from "./Magnet";
 
 export function Board() {
   const magnets = useMagnetDataStore((s) => s.magnets);
   const positions = useMagnetPositionStore((s) => s.positions);
   const owners = useMagnetPositionStore((s) => s.owners);
-  const setPosition = useMagnetPositionStore((s) => s.setPosition);
-  const { ready } = useWasm();
+  const { ready, clientId, sendDragStart, sendPositionUpdate, sendDragEnd } =
+    useWasm();
   const {
     fontSize,
     boardHeight,
@@ -37,17 +37,15 @@ export function Board() {
     [positions, magnets],
   );
 
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    const store = getWasmStore();
-    if (!store) return;
-    store.request_drag_start(event.active.id as string);
-  }, []);
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      sendDragStart(event.active.id as string);
+    },
+    [sendDragStart],
+  );
 
   const handleDragMove = useCallback(
     (event: DragMoveEvent) => {
-      const store = getWasmStore();
-      if (!store) return;
-
       const uuid = event.active.id as string;
       const magnet = magnets.find((m) => m.uuid === uuid);
       if (!magnet || !event.delta) return;
@@ -56,27 +54,19 @@ export function Board() {
       const deltaGridX = event.delta.x / cellWidth;
       const deltaGridY = event.delta.y / cellHeight;
 
-      // WASM handles clamping + rate-limited MQTT publish
-      // const resultJson =
-      store.request_position_update(
+      sendPositionUpdate(
         uuid,
         Math.round(currentPos.x + deltaGridX),
         Math.round(currentPos.y + deltaGridY),
         magnet.width,
         magnet.height,
       );
-
-      // const pos = JSON.parse(resultJson) as { x: number; y: number };
-      // setPosition(uuid, pos);
     },
-    [magnets, getPosition, setPosition, cellWidth, cellHeight],
+    [magnets, getPosition, cellWidth, cellHeight, sendPositionUpdate],
   );
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
-      const store = getWasmStore();
-      if (!store) return;
-
       const uuid = event.active.id as string;
       const magnet = magnets.find((m) => m.uuid === uuid);
       if (!magnet || !event.delta) return;
@@ -85,22 +75,16 @@ export function Board() {
       const deltaGridX = event.delta.x / cellWidth;
       const deltaGridY = event.delta.y / cellHeight;
 
-      // WASM handles final publish + owner release
-      const resultJson = store.request_drag_end(
+      sendDragEnd(
         uuid,
         Math.round(currentPos.x + deltaGridX),
         Math.round(currentPos.y + deltaGridY),
         magnet.width,
         magnet.height,
       );
-
-      const pos = JSON.parse(resultJson) as { x: number; y: number };
-      setPosition(uuid, pos);
     },
-    [magnets, getPosition, setPosition, cellWidth, cellHeight],
+    [magnets, getPosition, cellWidth, cellHeight, sendDragEnd],
   );
-
-  const clientId = getWasmStore()?.get_client_id() ?? "";
 
   return (
     <div
@@ -124,6 +108,7 @@ export function Board() {
       >
         {!ready && <div className="board__loading">Loading...</div>}
         <DndContext
+          collisionDetection={rectIntersection}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}
           onDragEnd={handleDragEnd}
