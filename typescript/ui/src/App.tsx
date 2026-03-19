@@ -1,10 +1,13 @@
-import { Board } from './components/Board';
-import './App.css';
+import { Board } from "./components/Board";
+import "./App.css";
+import { ScaleProvider } from "./context/Scale";
 
 function App() {
   return (
     <div className="app">
-      <Board />
+      <ScaleProvider>
+        <Board />
+      </ScaleProvider>
     </div>
   );
 }

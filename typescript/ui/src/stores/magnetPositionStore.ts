@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import type { MagnetPosition } from '../types/magnet';
+import { create } from "zustand";
+import type { MagnetPosition } from "../types/magnet";
 
 interface MagnetPositionStore {
   positions: Record<string, MagnetPosition>;
@@ -9,16 +9,22 @@ interface MagnetPositionStore {
   getPosition: (uuid: string) => MagnetPosition | undefined;
 }
 
-export const useMagnetPositionStore = create<MagnetPositionStore>((set, get) => ({
-  positions: {},
-  owners: {},
-  setPosition: (uuid, position) =>
-    set((state) => ({
-      positions: { ...state.positions, [uuid]: position },
-    })),
-  setOwner: (uuid, owner) =>
-    set((state) => ({
-      owners: { ...state.owners, [uuid]: owner },
-    })),
-  getPosition: (uuid) => get().positions[uuid],
-}));
+export const useMagnetPositionStore = create<MagnetPositionStore>(
+  (set, get) => ({
+    positions: {},
+    owners: {},
+    setPosition: (uuid, position) => {
+      console.log("POSITION", { uuid, position });
+      return set((state) => ({
+        positions: { ...state.positions, [uuid]: position },
+      }));
+    },
+    setOwner: (uuid, owner) => {
+      console.log("OWNER", { uuid, owner });
+      return set((state) => ({
+        owners: { ...state.owners, [uuid]: owner },
+      }));
+    },
+    getPosition: (uuid) => get().positions[uuid],
+  }),
+);

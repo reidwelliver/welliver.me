@@ -243,7 +243,7 @@ impl MagnetStateStore {
             clamp_position(x, y, width, height, inner.grid_cols, inner.grid_rows)
         };
 
-        // Check overlap
+        // Reject move if it would overlap another magnet
         if self.has_overlap(uuid, clamped.x, clamped.y, width, height) {
             let inner = self.inner.borrow();
             return match inner.positions.get(uuid) {

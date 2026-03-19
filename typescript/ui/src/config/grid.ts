@@ -1,6 +1,12 @@
-// Base grid optimized for 1920x1080
-export const BASE_WIDTH = 1920;
-export const BASE_HEIGHT = 1080;
-export const GRID_COLS = BASE_WIDTH / 10;
-export const GRID_ROWS = BASE_HEIGHT / 10;
-export const CELL_SIZE = BASE_WIDTH / GRID_COLS; // 40px at base resolution
+// 16:9 grid with fine granularity
+export const ASPECT_WIDTH = 16;
+export const ASPECT_HEIGHT = 9;
+export const CELLS_PER_ASPECT = 10;
+
+export const GRID_COLS = ASPECT_WIDTH * CELLS_PER_ASPECT;
+export const GRID_ROWS = ASPECT_HEIGHT * CELLS_PER_ASPECT;
+export const ASPECT = ASPECT_WIDTH / ASPECT_HEIGHT; // 16:9
+
+// Maximum padding (px) added to try to letterbox to 16:9
+export const MAX_PADDING = 500;
+export const MIN_PADDING = 10;

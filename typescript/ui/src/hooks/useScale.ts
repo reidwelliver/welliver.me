@@ -1,23 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import type { RefObject } from 'react';
-import { BASE_WIDTH, BASE_HEIGHT } from '../config/grid';
+import { useContext } from "react";
+import type { ScaleState } from "../types/scale";
+import { ScaleContext } from "../context/Scale/context";
 
-export function useScale(containerRef: RefObject<HTMLDivElement | null>) {
-  const [scale, setScale] = useState(1);
-
-  const updateScale = useCallback(() => {
-    if (!containerRef.current) return;
-    const { clientWidth, clientHeight } = containerRef.current;
-    const scaleX = clientWidth / BASE_WIDTH;
-    const scaleY = clientHeight / BASE_HEIGHT;
-    setScale(Math.min(scaleX, scaleY));
-  }, [containerRef]);
-
-  useEffect(() => {
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, [updateScale]);
-
+export function useScale(): ScaleState {
+  const scale = useContext(ScaleContext);
+  if (scale === undefined) {
+    throw new Error("useScale must be used within a ScaleContextProvider");
+  }
   return scale;
 }

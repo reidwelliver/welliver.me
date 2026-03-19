@@ -1,12 +1,15 @@
-import { useCallback, useRef } from 'react';
-import { DndContext } from '@dnd-kit/core';
-import type { DragStartEvent, DragEndEvent, DragMoveEvent } from '@dnd-kit/core';
-import { useMagnetDataStore } from '../stores/magnetDataStore';
-import { useMagnetPositionStore } from '../stores/magnetPositionStore';
-import { useScale } from '../hooks/useScale';
-import { useWasm, getWasmStore } from '../hooks/useWasm';
-import { Magnet } from './Magnet';
-import { CELL_SIZE, BASE_WIDTH, BASE_HEIGHT } from '../config/grid';
+import { useCallback } from "react";
+import { DndContext, rectIntersection } from "@dnd-kit/core";
+import type {
+  DragStartEvent,
+  DragEndEvent,
+  DragMoveEvent,
+} from "@dnd-kit/core";
+import { useMagnetDataStore } from "../stores/magnetDataStore";
+import { useMagnetPositionStore } from "../stores/magnetPositionStore";
+import { useScale } from "../hooks/useScale";
+import { useWasm, getWasmStore } from "../hooks/useWasm";
+import { Magnet } from "./Magnet";
 
 export function Board() {
   const magnets = useMagnetDataStore((s) => s.magnets);
@@ -14,8 +17,15 @@ export function Board() {
   const owners = useMagnetPositionStore((s) => s.owners);
   const setPosition = useMagnetPositionStore((s) => s.setPosition);
   const { ready } = useWasm();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scale = useScale(containerRef);
+  const {
+    fontSize,
+    boardHeight,
+    boardWidth,
+    cellHeight,
+    cellWidth,
+    paddingX,
+    paddingY,
+  } = useScale();
 
   const getPosition = useCallback(
     (uuid: string) => {
@@ -27,14 +37,11 @@ export function Board() {
     [positions, magnets],
   );
 
-  const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      const store = getWasmStore();
-      if (!store) return;
-      store.request_drag_start(event.active.id as string);
-    },
-    [],
-  );
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const store = getWasmStore();
+    if (!store) return;
+    store.request_drag_start(event.active.id as string);
+  }, []);
 
   const handleDragMove = useCallback(
     (event: DragMoveEvent) => {
@@ -46,11 +53,12 @@ export function Board() {
       if (!magnet || !event.delta) return;
 
       const currentPos = getPosition(uuid);
-      const deltaGridX = event.delta.x / (CELL_SIZE * scale);
-      const deltaGridY = event.delta.y / (CELL_SIZE * scale);
+      const deltaGridX = event.delta.x / cellWidth;
+      const deltaGridY = event.delta.y / cellHeight;
 
-      // WASM handles clamping, overlap detection, rate-limited MQTT publish
-      const resultJson = store.request_position_update(
+      // WASM handles clamping + rate-limited MQTT publish
+      // const resultJson =
+      store.request_position_update(
         uuid,
         Math.round(currentPos.x + deltaGridX),
         Math.round(currentPos.y + deltaGridY),
@@ -58,10 +66,10 @@ export function Board() {
         magnet.height,
       );
 
-      const pos = JSON.parse(resultJson) as { x: number; y: number };
-      setPosition(uuid, pos);
+      // const pos = JSON.parse(resultJson) as { x: number; y: number };
+      // setPosition(uuid, pos);
     },
-    [magnets, getPosition, setPosition, scale],
+    [magnets, getPosition, setPosition, cellWidth, cellHeight],
   );
 
   const handleDragEnd = useCallback(
@@ -74,8 +82,8 @@ export function Board() {
       if (!magnet || !event.delta) return;
 
       const currentPos = getPosition(uuid);
-      const deltaGridX = event.delta.x / (CELL_SIZE * scale);
-      const deltaGridY = event.delta.y / (CELL_SIZE * scale);
+      const deltaGridX = event.delta.x / cellWidth;
+      const deltaGridY = event.delta.y / cellHeight;
 
       // WASM handles final publish + owner release
       const resultJson = store.request_drag_end(
@@ -89,20 +97,29 @@ export function Board() {
       const pos = JSON.parse(resultJson) as { x: number; y: number };
       setPosition(uuid, pos);
     },
-    [magnets, getPosition, setPosition, scale],
+    [magnets, getPosition, setPosition, cellWidth, cellHeight],
   );
 
-  const clientId = getWasmStore()?.get_client_id() ?? '';
+  const clientId = getWasmStore()?.get_client_id() ?? "";
 
   return (
-    <div className="board-container" ref={containerRef}>
+    <div
+      className="board-container"
+      style={{
+        padding: `${paddingY}px ${paddingX}px`,
+      }}
+    >
       <div
         className="board"
         style={{
-          width: BASE_WIDTH,
-          height: BASE_HEIGHT,
-          position: 'relative',
-          transform: `scale(${scale})`,
+          width: boardWidth,
+          height: boardHeight,
+          position: "relative",
+          fontSize: `${fontSize}px`,
+          backgroundSize: `${cellWidth}px ${cellHeight}px`,
+          backgroundImage: `
+              linear-gradient(to right, grey 1px, transparent 1px),
+              linear-gradient(to bottom, grey 1px, transparent 1px)`,
         }}
       >
         {!ready && <div className="board__loading">Loading...</div>}
