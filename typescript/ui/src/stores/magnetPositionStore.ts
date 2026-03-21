@@ -1,8 +1,14 @@
 import { create } from "zustand";
-import type { MagnetPosition } from "../types/magnet";
+import type { MagnetPosition, MagnetPositionMap } from "../types/magnet";
+import magnetConfig from "../config/magnets.json";
+
+const initialPositions: MagnetPositionMap = magnetConfig.reduce((acc, mag) => {
+  acc[mag.uuid] = mag.start_pos;
+  return acc;
+}, {} as MagnetPositionMap);
 
 interface MagnetPositionStore {
-  positions: Record<string, MagnetPosition>;
+  positions: MagnetPositionMap;
   owners: Record<string, string | null>;
   setPosition: (uuid: string, position: MagnetPosition) => void;
   setOwner: (uuid: string, owner: string | null) => void;
@@ -11,7 +17,7 @@ interface MagnetPositionStore {
 
 export const useMagnetPositionStore = create<MagnetPositionStore>(
   (set, get) => ({
-    positions: {},
+    positions: initialPositions,
     owners: {},
     setPosition: (uuid, position) => {
       return set((state) => ({

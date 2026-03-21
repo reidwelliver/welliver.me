@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MagnetManager, CLIENT_ID } from "../workers/Magnet";
 
 const manager: MagnetManager = new MagnetManager();
+export { manager as magnetManagerInstance };
 
 export function useMagnetManager() {
   const [ready, setReady] = useState(false);

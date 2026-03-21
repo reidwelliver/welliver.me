@@ -11,3 +11,5 @@ export interface MagnetPosition {
   x: number;
   y: number;
 }
+
+export type MagnetPositionMap = Record<string, MagnetPosition>;
