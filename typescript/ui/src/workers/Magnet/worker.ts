@@ -1,4 +1,4 @@
-import init, { MagnetStateStore } from "../wasm-pkg/magnet_state";
+import init, { MagnetStateStore } from "../../wasm-pkg/magnet_state";
 import type { WorkerRequest, WorkerResponse } from "./messages";
 
 let store: MagnetStateStore | null = null;
@@ -12,10 +12,10 @@ async function handleInit(
   brokerUrl: string,
   gridCols: number,
   gridRows: number,
-  wasmUrl: string,
+  clientId: string,
 ) {
-  await init(wasmUrl);
-  store = new MagnetStateStore(gridCols, gridRows);
+  await init();
+  store = new MagnetStateStore(gridCols, gridRows, clientId);
   store.load_magnets(magnetsJson);
 
   const onPosition = (uuid: string, x: number, y: number) => {
@@ -27,7 +27,7 @@ async function handleInit(
   };
 
   const onReady = (ready: boolean) => {
-    post({ type: "ready", ready, clientId: store!.get_client_id() });
+    post({ type: "ready", ready });
   };
 
   store.connect(brokerUrl, onPosition, onOwner, onReady);
@@ -38,7 +38,13 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
 
   switch (msg.type) {
     case "init":
-      handleInit(msg.magnetsJson, msg.brokerUrl, msg.gridCols, msg.gridRows, msg.wasmUrl);
+      handleInit(
+        msg.magnetsJson,
+        msg.brokerUrl,
+        msg.gridCols,
+        msg.gridRows,
+        msg.clientId,
+      );
       break;
 
     case "dragStart":

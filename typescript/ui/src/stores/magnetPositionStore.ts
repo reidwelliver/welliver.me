@@ -14,13 +14,11 @@ export const useMagnetPositionStore = create<MagnetPositionStore>(
     positions: {},
     owners: {},
     setPosition: (uuid, position) => {
-      console.log("POSITION", { uuid, position });
       return set((state) => ({
         positions: { ...state.positions, [uuid]: position },
       }));
     },
     setOwner: (uuid, owner) => {
-      console.log("OWNER", { uuid, owner });
       return set((state) => ({
         owners: { ...state.owners, [uuid]: owner },
       }));

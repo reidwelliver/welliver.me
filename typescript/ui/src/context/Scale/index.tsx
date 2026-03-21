@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   MAX_PADDING,
   ASPECT,
@@ -11,45 +11,31 @@ import type { ScaleState } from "../../types/scale";
 import { ScaleContext } from "./context";
 
 export function ScaleProvider(props: { children: React.ReactNode }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState<ScaleState>(
-    calculateScale(window.innerWidth, window.innerHeight),
-  );
-
-  console.log(scale);
+  const [scale, setScale] = useState<ScaleState>(calculateScale());
 
   const updateScale = useCallback(() => {
-    if (!containerRef.current) return;
-    const vw = containerRef.current.clientWidth;
-    const vh = containerRef.current.clientHeight;
-    const scale = calculateScale(vw, vh);
+    const scale = calculateScale();
     setScale(scale);
-  }, [containerRef]);
+  }, []);
 
   useEffect(() => {
-    updateScale();
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, [updateScale]);
 
   return (
     <ScaleContext.Provider value={scale}>
-      <div
-        ref={containerRef}
-        style={{
-          width: "100svw",
-          height: "100svh",
-          position: "absolute",
-          opacity: 0,
-          zIndex: -1,
-        }}
-      />
       {props.children}
     </ScaleContext.Provider>
   );
 }
 
-function calculateScale(vw: number, vh: number): ScaleState {
+// optional vw and vh args in case we eventually want to calculate scale
+//  for something other than the current window size (a smaller surface)
+function calculateScale(
+  vw: number = window.innerWidth,
+  vh: number = window.innerHeight,
+): ScaleState {
   const viewAspect = vw / vh;
 
   let paddingX = MIN_PADDING;

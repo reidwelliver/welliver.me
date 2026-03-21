@@ -8,7 +8,7 @@ import type {
 import { useMagnetDataStore } from "../stores/magnetDataStore";
 import { useMagnetPositionStore } from "../stores/magnetPositionStore";
 import { useScale } from "../hooks/useScale";
-import { useWasm } from "../hooks/useWasm";
+import { useMagnetManager } from "../hooks/useMagnetManager";
 import { Magnet } from "./Magnet";
 
 export function Board() {
@@ -16,7 +16,7 @@ export function Board() {
   const positions = useMagnetPositionStore((s) => s.positions);
   const owners = useMagnetPositionStore((s) => s.owners);
   const { ready, clientId, sendDragStart, sendPositionUpdate, sendDragEnd } =
-    useWasm();
+    useMagnetManager();
   const {
     fontSize,
     boardHeight,

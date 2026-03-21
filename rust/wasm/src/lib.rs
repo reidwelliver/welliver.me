@@ -11,6 +11,8 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 
+const DRAG_REFRESH_RATE_MS: f64 = 200.0;
+
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Position {
     pub x: i32,
@@ -53,12 +55,8 @@ pub struct MagnetStateStore {
 #[wasm_bindgen]
 impl MagnetStateStore {
     #[wasm_bindgen(constructor)]
-    pub fn new(grid_cols: i32, grid_rows: i32) -> Self {
-        let client_id = format!(
-            "welliver-{}",
-            &js_sys::Math::random().to_string()[2..10]
-        );
-        let mqtt = Rc::new(WasmMqttClient::new(client_id.clone()));
+    pub fn new(grid_cols: i32, grid_rows: i32, client_id: &str) -> Self {
+        let mqtt = Rc::new(WasmMqttClient::new(client_id.to_string()));
 
         Self {
             inner: Rc::new(RefCell::new(StoreInner {
@@ -68,7 +66,7 @@ impl MagnetStateStore {
                 grid_cols,
                 grid_rows,
                 connected: false,
-                client_id,
+                client_id: client_id.to_string(),
                 last_publish_times: HashMap::new(),
                 cb_on_position: None,
                 cb_on_owner: None,
@@ -147,7 +145,7 @@ impl MagnetStateStore {
                         }) as Box<dyn Fn(RustMessage)>
                     };
                     if let Err(e) = mqtt_pos.subscribe_with_callback_internal(
-                        "magnets/+/position", QoS::AtLeastOnce, pos_cb
+                        "magnets/+/position", QoS::AtMostOnce, pos_cb
                     ).await {
                         web_sys::console::error_1(&format!("Subscribe position failed: {e:?}").into());
                     }
@@ -159,7 +157,7 @@ impl MagnetStateStore {
                         }) as Box<dyn Fn(RustMessage)>
                     };
                     if let Err(e) = mqtt_own.subscribe_with_callback_internal(
-                        "magnets/+/owner", QoS::AtLeastOnce, own_cb
+                        "magnets/+/owner", QoS::AtMostOnce, own_cb
                     ).await {
                         web_sys::console::error_1(&format!("Subscribe owner failed: {e:?}").into());
                     }
@@ -213,11 +211,6 @@ impl MagnetStateStore {
         inner.connected && !inner.magnets.is_empty()
     }
 
-    /// Get the client ID.
-    pub fn get_client_id(&self) -> String {
-        self.inner.borrow().client_id.clone()
-    }
-
     /// Called when user starts dragging a magnet.
     pub fn request_drag_start(&self, uuid: &str) {
         let client_id = self.inner.borrow().client_id.clone();
@@ -258,12 +251,12 @@ impl MagnetStateStore {
         }
         let json = serde_json::to_string(&clamped).unwrap_or_default();
 
-        // Rate limit MQTT publish to 100ms
+        // Rate limit MQTT publish to 250ms
         let now = js_sys::Date::now();
         let should_publish = {
             let inner = self.inner.borrow();
             let last = inner.last_publish_times.get(uuid).copied().unwrap_or(0.0);
-            now - last >= 100.0
+            now - last >= DRAG_REFRESH_RATE_MS
         };
         if should_publish {
             self.inner.borrow_mut().last_publish_times.insert(uuid.to_string(), now);
@@ -298,7 +291,6 @@ impl MagnetStateStore {
 
         let json = serde_json::to_string(&final_pos).unwrap_or_default();
 
-        // Publish final position (bypass rate limit)
         self.publish_retained(&format!("magnets/{uuid}/position"), json.as_bytes());
 
         // Release ownership
@@ -349,7 +341,7 @@ impl MagnetStateStore {
         let payload = payload.to_vec();
         spawn_local(async move {
             let mut opts = WasmPublishOptions::new();
-            opts.set_qos(1);
+            opts.set_qos(0);
             opts.set_retain(true);
             if let Err(e) = mqtt.publish_with_options(&topic, &payload, &opts).await {
                 web_sys::console::error_1(&format!("Publish failed: {e:?}").into());
@@ -367,6 +359,8 @@ fn handle_position_message(inner: &Rc<RefCell<StoreInner>>, msg: &RustMessage) {
     let uuid = parts[1];
 
     let payload = String::from_utf8_lossy(&msg.payload);
+    web_sys::console::log_1(&format!("MQTT position for {uuid}: {payload}").into());
+
     if let Ok(pos) = serde_json::from_str::<Position>(&payload) {
         let (grid_cols, grid_rows, width, height) = {
             let s = inner.borrow();
@@ -403,6 +397,8 @@ fn handle_owner_message(inner: &Rc<RefCell<StoreInner>>, msg: &RustMessage) {
     let uuid = parts[1];
 
     let payload = String::from_utf8_lossy(&msg.payload);
+    web_sys::console::log_1(&format!("MQTT owner for {uuid}: {payload}").into());
+
     let owner = if payload.is_empty() || payload.as_ref() == "null" {
         None
     } else {
