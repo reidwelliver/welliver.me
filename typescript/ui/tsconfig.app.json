@@ -22,7 +22,12 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": ".", // Required for paths to work
+    "paths": {
+      "@welliver-me/ui/*": ["./src/*"],
+    },
   },
-  "include": ["src"]
+  "include": ["src"],
 }

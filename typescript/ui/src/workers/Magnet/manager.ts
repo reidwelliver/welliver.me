@@ -2,15 +2,12 @@ import { WorkerManager } from "../../workers/WorkerManager";
 import { useMagnetDataStore as MagnetDataStore } from "../../stores/magnetDataStore";
 import { useMagnetPositionStore as MagnetPositionStore } from "../../stores/magnetPositionStore";
 import { GRID_COLS, GRID_ROWS } from "../../config/grid";
+import { CLIENT_ID, BROKER_URL } from "../../config/network";
 import type { WorkerRequest, WorkerResponse } from "./messages";
 import type { MessageOfType } from "../WorkerManager/types";
 import { createDeferrable } from "../../utils/deferrable";
 
-const BROKER_URL =
-  import.meta.env.VITE_MQTT_BROKER_URL || "ws://localhost:9001/mqtt";
-
 const WORKER_URL = new URL("./worker.ts", import.meta.url);
-export const CLIENT_ID = `magnet-${Math.random().toString(16).slice(2)}`;
 
 export class MagnetManager {
   private worker: WorkerManager<WorkerRequest, WorkerResponse>;

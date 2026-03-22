@@ -1,7 +1,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import type { MagnetData } from "../types/magnet";
-import { useScale } from "../hooks/useScale";
+import type { MagnetData } from "../../types/magnet";
+import { useScale } from "../../hooks/useScale";
 
 interface MagnetProps {
   magnet: MagnetData;
@@ -11,7 +11,7 @@ interface MagnetProps {
   disabled?: boolean;
 }
 
-export function Magnet({
+export function TextMagnet({
   magnet,
   position,
   isOwned,

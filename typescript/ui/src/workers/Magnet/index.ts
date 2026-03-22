@@ -1,1 +1,1 @@
-export { MagnetManager, CLIENT_ID } from "./manager";
+export { MagnetManager } from "./manager";
