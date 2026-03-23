@@ -1,6 +1,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
+import "./Magnet.css";
 import type { MagnetData } from "@welliver-me/ui/types/magnet";
 import { useScale } from "@welliver-me/ui/hooks/useScale";
 

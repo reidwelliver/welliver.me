@@ -8,7 +8,7 @@ import type {
 import type { MagnetPosition, MagnetPositionMap } from "../types/magnet";
 import { useMagnetDataStore } from "../stores/magnetDataStore";
 import { useMagnetPositionStore } from "../stores/magnetPositionStore";
-import { magnetManagerInstance as manager } from "../hooks/useMagnetManager";
+import { magnetManagerInstance as manager } from "../workers/Magnet";
 import { useScale } from "../hooks/useScale";
 
 const UNKNOWN_POSITION: MagnetPosition = { x: 0, y: 0 };

@@ -1,6 +1,11 @@
 import { create } from "zustand";
-import type { MagnetPosition, MagnetPositionMap } from "../types/magnet";
-import magnetConfig from "../config/magnets.json";
+
+import type {
+  MagnetPosition,
+  MagnetPositionMap,
+} from "@welliver-me/ui/types/magnet";
+import magnetConfig from "@welliver-me/ui/config/magnets.json";
+import { magnetManagerInstance as manager } from "@welliver-me/ui/workers/Magnet";
 
 const initialPositions: MagnetPositionMap = magnetConfig.reduce((acc, mag) => {
   acc[mag.uuid] = mag.start_pos;
@@ -8,6 +13,7 @@ const initialPositions: MagnetPositionMap = magnetConfig.reduce((acc, mag) => {
 }, {} as MagnetPositionMap);
 
 interface MagnetPositionStore {
+  ready: boolean;
   positions: MagnetPositionMap;
   owners: Record<string, string | null>;
   setPosition: (uuid: string, position: MagnetPosition) => void;
@@ -16,19 +22,34 @@ interface MagnetPositionStore {
 }
 
 export const useMagnetPositionStore = create<MagnetPositionStore>(
-  (set, get) => ({
-    positions: initialPositions,
-    owners: {},
-    setPosition: (uuid, position) => {
-      return set((state) => ({
-        positions: { ...state.positions, [uuid]: position },
+  (set, get) => {
+    const initMagnetManager = async () => {
+      manager.init();
+      const ready = await manager.ready;
+      set(() => ({
+        initializing: false,
+        ready,
       }));
-    },
-    setOwner: (uuid, owner) => {
-      return set((state) => ({
-        owners: { ...state.owners, [uuid]: owner },
-      }));
-    },
-    getPosition: (uuid) => get().positions[uuid],
-  }),
+    };
+
+    initMagnetManager();
+
+    return {
+      initializing: true,
+      ready: false,
+      positions: initialPositions,
+      owners: {},
+      setPosition: (uuid, position) => {
+        return set((state) => ({
+          positions: { ...state.positions, [uuid]: position },
+        }));
+      },
+      setOwner: (uuid, owner) => {
+        return set((state) => ({
+          owners: { ...state.owners, [uuid]: owner },
+        }));
+      },
+      getPosition: (uuid) => get().positions[uuid],
+    };
+  },
 );
