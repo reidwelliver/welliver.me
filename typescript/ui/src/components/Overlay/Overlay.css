@@ -1,0 +1,137 @@
+.overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 20px;
+}
+
+.overlay-dismiss {
+    flex: 1 1 auto;
+    cursor: pointer;
+}
+
+.overlay-panel {
+    flex: 0 0 auto;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 6px 6px 0 0;
+    box-shadow:
+        0 -4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: overlay-slide-up 0.25s ease-out;
+}
+
+.overlay-panel--closing {
+    animation: overlay-slide-down 0.25s ease-in forwards;
+}
+
+@keyframes overlay-slide-up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes overlay-slide-down {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.overlay-header__title {
+    font-family: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.overlay-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.overlay-header__esc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.04);
+    color: #555;
+    cursor: pointer;
+    font-family: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1;
+}
+
+.overlay-header__esc:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a1a;
+}
+
+.overlay-header__close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    font-weight: 300;
+    cursor: pointer;
+    color: #1a1a1a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.overlay-header__close:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.overlay-content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.overlay-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.overlay-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.overlay-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+}
+
+.overlay-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -11,6 +12,11 @@ interface MagnetProps {
   isOwned: boolean;
   isOwnedByMe: boolean;
   disabled?: boolean;
+  onLinkClick: (href: string, title: string) => void;
+}
+
+function isLocalHref(href: string): boolean {
+  return href.startsWith("/") || href.startsWith("#");
 }
 
 export function Magnet({
@@ -19,6 +25,7 @@ export function Magnet({
   isOwned,
   isOwnedByMe,
   disabled,
+  onLinkClick,
 }: MagnetProps) {
   const isDisabled = disabled || (isOwned && !isOwnedByMe);
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -29,6 +36,27 @@ export function Magnet({
 
   const { cellHeight, cellWidth } = useScale();
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      // Only handle left-click
+      if (e.button !== 0) return;
+      if (!magnet.href || magnet.href === "#") return;
+
+      if (isLocalHref(magnet.href)) {
+        e.preventDefault();
+        onLinkClick(magnet.href, magnet.title);
+      } else {
+        window.open(magnet.href, "_blank", "noopener,noreferrer");
+      }
+    },
+    [magnet.href, magnet.title, onLinkClick],
+  );
+
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    // Prevent browser context menu — right-click is for dragging
+    e.preventDefault();
+  }, []);
+
   const style: React.CSSProperties = {
     position: "absolute",
     left: position.x * cellWidth,
@@ -37,7 +65,7 @@ export function Magnet({
     height: magnet.height * cellHeight,
     transform: CSS.Translate.toString(transform),
     zIndex: isDragging ? 1000 : 1,
-    cursor: isDisabled ? "not-allowed" : "grab",
+    cursor: isDisabled ? "not-allowed" : "pointer",
     touchAction: "none",
   };
 
@@ -46,6 +74,8 @@ export function Magnet({
       ref={setNodeRef}
       style={style}
       className={`magnet ${isDragging ? "magnet--dragging" : ""} ${isOwned && !isOwnedByMe ? "magnet--locked" : ""}`}
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
       {...listeners}
       {...attributes}
     >

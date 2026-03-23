@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { DndContext } from "@dnd-kit/core";
+import { useCallback, useMemo, useState } from "react";
+import { DndContext, useSensor, useSensors } from "@dnd-kit/core";
 
 import "./Board.css";
 import { useMagnetDataStore } from "@welliver-me/ui/stores/magnetDataStore";
@@ -10,9 +10,17 @@ import {
   getPosition,
 } from "@welliver-me/ui/hooks/useMagnetDragEvents";
 import { Magnet } from "@welliver-me/ui/components/Magnet";
+import { Overlay } from "@welliver-me/ui/components/Overlay";
+import { Welcome } from "@welliver-me/ui/components/Welcome";
 import { DEBUG } from "@welliver-me/ui/config";
 import { CLIENT_ID } from "@welliver-me/ui/config/network";
+import { RightClickSensor } from "@welliver-me/ui/sensors/RightClickSensor";
 import { Loading } from "./Loading";
+
+interface OverlayState {
+  href: string;
+  title: string;
+}
 
 export function Board() {
   const magnets = useMagnetDataStore((s) => s.magnets);
@@ -24,31 +32,72 @@ export function Board() {
   const { handleDragStart, handleDragMove, handleDragEnd } =
     useMagnetDragEvents();
 
+  const sensors = useSensors(useSensor(RightClickSensor));
+
+  const [overlay, setOverlay] = useState<OverlayState | null>(null);
+  const [showWelcome, setShowWelcome] = useState(
+    () => localStorage.getItem("welliver-welcome-dismissed") !== "true",
+  );
+
+  const handleLinkClick = useCallback((href: string, title: string) => {
+    setOverlay({ href, title });
+  }, []);
+
+  const handleOverlayClose = useCallback(() => {
+    setOverlay(null);
+  }, []);
+
+  const handleWelcomeClose = useCallback(() => {
+    setShowWelcome(false);
+    localStorage.setItem("welliver-welcome-dismissed", "true");
+  }, []);
+
+  const handleWelcomeOpen = useCallback(() => {
+    setShowWelcome(true);
+  }, []);
+
   if (!ready) {
     return <Loading />;
   }
 
   return (
-    <div className="board-container" style={boardContainerStyle}>
-      <div className="board" style={boardStyle}>
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragMove={handleDragMove}
-          onDragEnd={handleDragEnd}
-        >
-          {magnets.map((magnet) => (
-            <Magnet
-              key={magnet.uuid}
-              magnet={magnet}
-              position={getPosition(positions, magnet.uuid)}
-              isOwned={owners[magnet.uuid] != null}
-              isOwnedByMe={owners[magnet.uuid] === CLIENT_ID}
-              disabled={!ready}
-            />
-          ))}
-        </DndContext>
+    <>
+      <div className="board-container" style={boardContainerStyle}>
+        <div className={`board ${overlay || showWelcome ? "board--faded" : ""}`} style={boardStyle}>
+          <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragMove={handleDragMove}
+            onDragEnd={handleDragEnd}
+          >
+            {magnets.map((magnet) => (
+              <Magnet
+                key={magnet.uuid}
+                magnet={magnet}
+                position={getPosition(positions, magnet.uuid)}
+                isOwned={owners[magnet.uuid] != null}
+                isOwnedByMe={owners[magnet.uuid] === CLIENT_ID}
+                disabled={!ready}
+                onLinkClick={handleLinkClick}
+              />
+            ))}
+          </DndContext>
+        </div>
       </div>
-    </div>
+      {showWelcome && <Welcome onClose={handleWelcomeClose} />}
+      {!showWelcome && !overlay && (
+        <button className="help-fab" onClick={handleWelcomeOpen}>
+          ?
+        </button>
+      )}
+      {overlay && (
+        <Overlay
+          href={overlay.href}
+          title={overlay.title}
+          onClose={handleOverlayClose}
+        />
+      )}
+    </>
   );
 }
 
