@@ -13,7 +13,7 @@ import { Magnet } from "@welliver-me/ui/components/Magnet";
 import { Overlay } from "@welliver-me/ui/components/Overlay";
 import { Welcome } from "@welliver-me/ui/components/Welcome";
 import { DEBUG } from "@welliver-me/ui/config";
-import { CLIENT_ID } from "@welliver-me/ui/config/network";
+import { CLIENT_ID } from "@welliver-me/ui/workers/Magnet/manager";
 import { RightClickSensor } from "@welliver-me/ui/sensors/RightClickSensor";
 import { Loading } from "./Loading";
 
@@ -63,7 +63,10 @@ export function Board() {
   return (
     <>
       <div className="board-container" style={boardContainerStyle}>
-        <div className={`board ${overlay || showWelcome ? "board--faded" : ""}`} style={boardStyle}>
+        <div
+          className={`board ${overlay || showWelcome ? "board--faded" : ""}`}
+          style={boardStyle}
+        >
           <DndContext
             sensors={sensors}
             onDragStart={handleDragStart}

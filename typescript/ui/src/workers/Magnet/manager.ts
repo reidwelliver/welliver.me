@@ -1,12 +1,15 @@
-import { WorkerManager } from "../../workers/WorkerManager";
-import { useMagnetDataStore as MagnetDataStore } from "../../stores/magnetDataStore";
-import { useMagnetPositionStore as MagnetPositionStore } from "../../stores/magnetPositionStore";
-import { GRID_COLS, GRID_ROWS } from "../../config/grid";
-import { CLIENT_ID, BROKER_URL } from "../../config/network";
+import { WorkerManager } from "@welliver-me/ui/workers/WorkerManager";
+import { useMagnetDataStore as MagnetDataStore } from "@welliver-me/ui/stores/magnetDataStore";
+import { useMagnetPositionStore as MagnetPositionStore } from "@welliver-me/ui/stores/magnetPositionStore";
+import { GRID_COLS, GRID_ROWS } from "@welliver-me/ui/config/grid";
 import type { WorkerRequest, WorkerResponse } from "./messages";
 import type { MessageOfType } from "../WorkerManager/types";
-import { createDeferrable } from "../../utils/deferrable";
+import { createDeferrable } from "@welliver-me/ui/utils/deferrable";
 
+export const CLIENT_ID = `magnet-${Math.random().toString(16).slice(2)}`;
+
+const BROKER_URL =
+  import.meta.env.VITE_MQTT_BROKER_URL || "ws://localhost:9001/mqtt";
 const WORKER_URL = new URL("./worker.ts", import.meta.url);
 
 export class MagnetManager {

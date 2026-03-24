@@ -1,0 +1,47 @@
+.content {
+    font-family: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    line-height: 1.7;
+    padding: 0 clamp(16px, 5vw, 40px);
+}
+
+.content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+
+.content h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 24px 0 8px;
+}
+
+.content p {
+    font-size: 15px;
+    margin: 0 0 16px;
+}
+
+.content img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 16px 0;
+}
+
+.content img.float-right {
+    float: right;
+    width: 40%;
+    margin: 4px 0 24px 40px;
+}
+
+.content img.float-left {
+    float: left;
+    width: 40%;
+    margin: 4px 40px 24px 0;
+}
+
+.content .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}

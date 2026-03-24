@@ -14,6 +14,8 @@ const initialPositions: MagnetPositionMap = magnetConfig.reduce((acc, mag) => {
 
 interface MagnetPositionStore {
   ready: boolean;
+  initializing: boolean;
+
   positions: MagnetPositionMap;
   owners: Record<string, string | null>;
   setPosition: (uuid: string, position: MagnetPosition) => void;
@@ -24,7 +26,6 @@ interface MagnetPositionStore {
 export const useMagnetPositionStore = create<MagnetPositionStore>(
   (set, get) => {
     const initMagnetManager = async () => {
-      manager.init();
       const ready = await manager.ready;
       set(() => ({
         initializing: false,

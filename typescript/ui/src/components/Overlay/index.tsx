@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./Overlay.css";
+import { Content } from "@welliver-me/ui/components/Content";
 
 interface OverlayProps {
   href: string;
@@ -13,9 +14,7 @@ const MIN_HEIGHT = 55; // vh - below this, dismiss
 const CLOSE_DURATION = 500;
 const SCROLL_SENSITIVITY = 0.01; // how much scroll expands/contracts the sheet
 
-const TEST_CONTENT = Array(20000).fill("hello").join(" ");
-
-export function Overlay({ href: _href, title, onClose }: OverlayProps) {
+export function Overlay({ href, title, onClose }: OverlayProps) {
   const [closing, setClosing] = useState(false);
   const [heightVh, setHeightVh] = useState(INITIAL_HEIGHT);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -88,8 +87,24 @@ export function Overlay({ href: _href, title, onClose }: OverlayProps) {
           <span className="overlay-header__title">{title}</span>
           <div className="overlay-header__actions">
             <kbd className="overlay-header__esc" onClick={startClose}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="7" y="10.5" textAnchor="middle" fontSize="9" fontFamily="Jost, sans-serif" fontWeight="600" fill="currentColor">ESC</text>
+              <svg
+                width="18"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <text
+                  x="7"
+                  y="10.5"
+                  textAnchor="middle"
+                  fontSize="9"
+                  fontFamily="Jost, sans-serif"
+                  fontWeight="600"
+                  fill="currentColor"
+                >
+                  ESC
+                </text>
               </svg>
             </kbd>
             <button className="overlay-header__close" onClick={startClose}>
@@ -102,7 +117,7 @@ export function Overlay({ href: _href, title, onClose }: OverlayProps) {
           ref={contentRef}
           onScroll={handleScroll}
         >
-          <p>{TEST_CONTENT}</p>
+          <Content href={href} />
         </div>
       </div>
     </div>
