@@ -1,29 +1,29 @@
 import type { JSX } from "react";
 
 import "./Content.css";
-import { Rust } from "./Rust";
-import { Typescript } from "./Typescript";
-import { Linux } from "./Linux";
+// import { Rust } from "./Rust";
+import { Jobs } from "./Jobs";
+// import { Linux } from "./Linux";
 import { Desk } from "./Desk";
-import { Cloud } from "./Cloud";
+// import { Cloud } from "./Cloud";
 import { Airstream } from "./Airstream";
 import { Radio } from "./Radio";
 import { Travel } from "./Travel";
-import { Robot } from "./Robot";
-import { IoT } from "./IoT";
+// import { Robot } from "./Robot";
+// import { IoT } from "./IoT";
 
 const CONTENT_MAP: Record<string, () => JSX.Element> = {
-  "#rust": Rust,
-  "#typescript": Typescript,
-  "#react": Typescript,
-  "#linux": Linux,
+  "#rust": Jobs, //Rust,
+  "#typescript": Jobs,
+  "#react": Jobs,
+  "#linux": Jobs, //Linux,
   "#desk": Desk,
-  "#cloud": Cloud,
+  "#cloud": Jobs, //Cloud,
   "#airstream": Airstream,
   "#radio": Radio,
   "#travel": Travel,
-  "#robot": Robot,
-  "#IoT": IoT,
+  "#robot": Jobs, //Robot,
+  "#IoT": Jobs, //IoT,
 };
 
 interface ContentProps {

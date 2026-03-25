@@ -40,7 +40,14 @@ export function Board() {
   );
 
   const handleLinkClick = useCallback((href: string, title: string) => {
-    setOverlay({ href, title });
+    switch (href.charAt(0)) {
+      case "#":
+        setOverlay({ href, title });
+        break;
+      case "/":
+      default:
+        window.open(href, "_blank", "noopener,noreferrer");
+    }
   }, []);
 
   const handleOverlayClose = useCallback(() => {

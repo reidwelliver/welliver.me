@@ -84,7 +84,7 @@ export function Overlay({ href, title, onClose }: OverlayProps) {
         style={{ height: `${heightVh}vh` }}
       >
         <div className="overlay-header">
-          <span className="overlay-header__title">{title}</span>
+          <span className="overlay-header__title">{/*{title}*/}</span>
           <div className="overlay-header__actions">
             <kbd className="overlay-header__esc" onClick={startClose}>
               <svg
