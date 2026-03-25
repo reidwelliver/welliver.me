@@ -14,7 +14,7 @@ const MIN_HEIGHT = 55; // vh - below this, dismiss
 const CLOSE_DURATION = 500;
 const SCROLL_SENSITIVITY = 0.01; // how much scroll expands/contracts the sheet
 
-export function Overlay({ href, title, onClose }: OverlayProps) {
+export function Overlay({ href, onClose }: OverlayProps) {
   const [closing, setClosing] = useState(false);
   const [heightVh, setHeightVh] = useState(INITIAL_HEIGHT);
   const contentRef = useRef<HTMLDivElement>(null);
