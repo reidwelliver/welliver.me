@@ -1,7 +1,6 @@
 export function Airstream() {
   return (
     <article className="content">
-      <h2>The Restoration of my 1972 Airstream</h2>
       <h3>Early Days</h3>
       <p>
         A few years after college, I was looking to move out of Philadelphia and

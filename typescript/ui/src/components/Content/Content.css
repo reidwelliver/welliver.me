@@ -11,6 +11,10 @@
     margin: 0 0 12px;
 }
 
+.content h3:first-of-type {
+    margin-top: 6px;
+}
+
 .content h3 {
     font-size: 17px;
     font-weight: 600;

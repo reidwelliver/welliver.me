@@ -1,7 +1,6 @@
 export function Jobs() {
   return (
     <article className="content">
-      <h2>Career History</h2>
       <h3>2014-2015 - SevOne - Junior Developer</h3>
       <p>
         I worked as a junior developer at SevOne starting with a Drexel

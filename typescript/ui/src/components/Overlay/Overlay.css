@@ -6,51 +6,60 @@
     height: 100vh;
     z-index: 2000;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 clamp(20px, 15vw, 100px);
+    align-items: center;
+    justify-content: center;
 }
 
 .overlay-dismiss {
-    flex: 1 1 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
 }
 
 .overlay-panel {
-    flex: 0 0 auto;
+    position: relative;
+    width: 80vw;
+    height: 90vh;
     background: rgba(255, 255, 255, 0.55);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 6px 6px 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
     box-shadow:
-        0 -4px 24px rgba(0, 0, 0, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: overlay-slide-up 0.25s ease-out;
+    animation: overlay-fade-in 0.25s ease-out;
 }
 
 .overlay-panel--closing {
-    animation: overlay-slide-down 0.25s ease-in forwards;
+    animation: overlay-fade-out 0.25s ease-in forwards;
 }
 
-@keyframes overlay-slide-up {
+@keyframes overlay-fade-in {
     from {
-        transform: translateY(100%);
+        opacity: 0;
+        transform: scale(0.95);
     }
     to {
-        transform: translateY(0);
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-@keyframes overlay-slide-down {
+@keyframes overlay-fade-out {
     from {
-        transform: translateY(0);
+        opacity: 1;
+        transform: scale(1);
     }
     to {
-        transform: translateY(100%);
+        opacity: 0;
+        transform: scale(0.95);
     }
 }
 
@@ -65,7 +74,7 @@
 
 .overlay-header__title {
     font-family: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: #1a1a1a;
 }
@@ -114,7 +123,8 @@
 .overlay-content {
     flex: 1;
     overflow: auto;
-    padding: 16px;
+    padding: 0 16px;
+    margin: 10px 0;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }

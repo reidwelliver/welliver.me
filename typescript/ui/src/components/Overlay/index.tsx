@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./Overlay.css";
 import { Content } from "@welliver-me/ui/components/Content";
+import { getContentTitle } from "@welliver-me/ui/components/Content/config";
 
 interface OverlayProps {
   href: string;
@@ -8,66 +9,16 @@ interface OverlayProps {
   onClose: () => void;
 }
 
-const INITIAL_HEIGHT = 80; // vh
-const MAX_HEIGHT = 95; // vh
-const MIN_HEIGHT = 70; // vh - below this, dismiss
-const CLOSE_DURATION = 500;
-const SCROLL_DOWN_SENSITIVITY = 0.01; // how much scroll expands/contracts the sheet
-const SCROLL_UP_SENSITIVITY = 0.05; // how much scroll expands/contracts the sheet
+const CLOSE_DURATION = 200;
 
 export function Overlay({ href, onClose }: OverlayProps) {
   const [closing, setClosing] = useState(false);
-  const [heightVh, setHeightVh] = useState(INITIAL_HEIGHT);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const atTopRef = useRef(true);
 
   const startClose = useCallback(() => {
     if (closing) return;
     setClosing(true);
     setTimeout(onClose, CLOSE_DURATION);
   }, [onClose, closing]);
-
-  // Track whether content is scrolled to top
-  const handleScroll = useCallback(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    atTopRef.current = el.scrollTop <= 0;
-  }, []);
-
-  // Wheel controls sheet height when content is at top (scrolling up)
-  // or when sheet isn't at max height (scrolling down)
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el || closing) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp = e.deltaY < 0;
-
-      // Scrolling down: expand sheet if not at max, otherwise let content scroll
-      if (scrollingDown && heightVh < MAX_HEIGHT) {
-        e.preventDefault();
-        setHeightVh((h) =>
-          Math.min(MAX_HEIGHT, h + e.deltaY * SCROLL_DOWN_SENSITIVITY),
-        );
-        return;
-      }
-
-      // Scrolling up: if content is at top, shrink the sheet
-      if (scrollingUp && atTopRef.current) {
-        e.preventDefault();
-        const newHeight = heightVh + e.deltaY * SCROLL_UP_SENSITIVITY;
-        if (newHeight < MIN_HEIGHT) {
-          startClose();
-        } else {
-          setHeightVh(newHeight);
-        }
-      }
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [heightVh, closing, startClose]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -82,10 +33,9 @@ export function Overlay({ href, onClose }: OverlayProps) {
       <div className="overlay-dismiss" onClick={startClose} />
       <div
         className={`overlay-panel ${closing ? "overlay-panel--closing" : ""}`}
-        style={{ height: `${heightVh}vh` }}
       >
         <div className="overlay-header">
-          <span className="overlay-header__title">{/*{title}*/}</span>
+          <span className="overlay-header__title">{getContentTitle(href)}</span>
           <div className="overlay-header__actions">
             <kbd className="overlay-header__esc" onClick={startClose}>
               <svg
@@ -113,11 +63,7 @@ export function Overlay({ href, onClose }: OverlayProps) {
             </button>
           </div>
         </div>
-        <div
-          className="overlay-content"
-          ref={contentRef}
-          onScroll={handleScroll}
-        >
+        <div className="overlay-content">
           <Content href={href} />
         </div>
       </div>
