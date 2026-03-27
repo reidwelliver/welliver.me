@@ -32,3 +32,5 @@ typescript/ui/dist/
 
 # WASM
 *.wasm.d.ts
+
+.claude

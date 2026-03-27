@@ -5,12 +5,18 @@ import { GRID_COLS, GRID_ROWS } from "@welliver-me/ui/config/grid";
 import type { WorkerRequest, WorkerResponse } from "./messages";
 import type { MessageOfType } from "../WorkerManager/types";
 import { createDeferrable } from "@welliver-me/ui/utils/deferrable";
+import workerUrl from "./worker.ts?worker&url";
 
 export const CLIENT_ID = `magnet-${Math.random().toString(16).slice(2)}`;
 
+const TAIL_BROKER_URL = "wss://reid-desk.tail96ee50.ts.net";
 const BROKER_URL =
-  import.meta.env.VITE_MQTT_BROKER_URL || "ws://localhost:9001/mqtt";
-const WORKER_URL = new URL("./worker.ts", import.meta.url);
+  window.location.hostname === "localhost"
+    ? "ws://localhost:9001/mqtt"
+    : TAIL_BROKER_URL;
+
+// vite returns a URL but it's typed as a string
+const WORKER_URL = workerUrl as unknown as URL;
 
 export class MagnetManager {
   private worker: WorkerManager<WorkerRequest, WorkerResponse>;
