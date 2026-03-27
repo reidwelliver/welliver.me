@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useParams, useNavigate } from "react-router";
 import { DndContext, useSensor, useSensors } from "@dnd-kit/core";
 
 import "./Board.css";
@@ -15,14 +16,14 @@ import { Welcome } from "@welliver-me/ui/components/Welcome";
 import { DEBUG } from "@welliver-me/ui/config";
 import { CLIENT_ID } from "@welliver-me/ui/workers/Magnet/manager";
 import { RightClickSensor } from "@welliver-me/ui/sensors/RightClickSensor";
+import { getContentTitle } from "@welliver-me/ui/components/Content/config";
+import { slugToHref, hrefToSlug } from "@welliver-me/ui/config/routes";
 import { Loading } from "./Loading";
 
-interface OverlayState {
-  href: string;
-  title: string;
-}
-
 export function Board() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+
   const magnets = useMagnetDataStore((s) => s.magnets);
   const owners = useMagnetPositionStore((s) => s.owners);
   const positions = useMagnetPositionStore((s) => s.positions);
@@ -34,25 +35,34 @@ export function Board() {
 
   const sensors = useSensors(useSensor(RightClickSensor));
 
-  const [overlay, setOverlay] = useState<OverlayState | null>(null);
+  // Overlay state derived from URL
+  const overlay = useMemo(() => {
+    if (!slug) return null;
+    const href = slugToHref(slug);
+    const title = getContentTitle(href);
+    if (!title) return null;
+    return { href, title };
+  }, [slug]);
+
   const [showWelcome, setShowWelcome] = useState(
     () => localStorage.getItem("welliver-welcome-dismissed") !== "true",
   );
 
-  const handleLinkClick = useCallback((href: string, title: string) => {
-    switch (href.charAt(0)) {
-      case "#":
-        setOverlay({ href, title });
-        break;
-      case "/":
-      default:
+  const handleLinkClick = useCallback(
+    (href: string, _title: string) => {
+      if (href.startsWith("#") && href.length > 1) {
+        const s = hrefToSlug(href);
+        if (s) navigate(`/${s}`);
+      } else if (href.startsWith("http") || href.startsWith("/")) {
         window.open(href, "_blank", "noopener,noreferrer");
-    }
-  }, []);
+      }
+    },
+    [navigate],
+  );
 
   const handleOverlayClose = useCallback(() => {
-    setOverlay(null);
-  }, []);
+    navigate("/");
+  }, [navigate]);
 
   const handleWelcomeClose = useCallback(() => {
     setShowWelcome(false);
@@ -94,7 +104,7 @@ export function Board() {
           </DndContext>
         </div>
       </div>
-      {showWelcome && <Welcome onClose={handleWelcomeClose} />}
+      {showWelcome && !overlay && <Welcome onClose={handleWelcomeClose} />}
       {!showWelcome && !overlay && (
         <button className="help-fab" onClick={handleWelcomeOpen}>
           ?
