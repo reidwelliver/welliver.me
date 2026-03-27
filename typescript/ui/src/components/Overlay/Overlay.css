@@ -19,8 +19,8 @@
 .overlay-panel {
     flex: 0 0 auto;
     background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-top: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 6px 6px 0 0;
     box-shadow:

@@ -8,11 +8,12 @@ interface OverlayProps {
   onClose: () => void;
 }
 
-const INITIAL_HEIGHT = 60; // vh
+const INITIAL_HEIGHT = 80; // vh
 const MAX_HEIGHT = 95; // vh
-const MIN_HEIGHT = 55; // vh - below this, dismiss
+const MIN_HEIGHT = 70; // vh - below this, dismiss
 const CLOSE_DURATION = 500;
-const SCROLL_SENSITIVITY = 0.01; // how much scroll expands/contracts the sheet
+const SCROLL_DOWN_SENSITIVITY = 0.01; // how much scroll expands/contracts the sheet
+const SCROLL_UP_SENSITIVITY = 0.05; // how much scroll expands/contracts the sheet
 
 export function Overlay({ href, onClose }: OverlayProps) {
   const [closing, setClosing] = useState(false);
@@ -47,7 +48,7 @@ export function Overlay({ href, onClose }: OverlayProps) {
       if (scrollingDown && heightVh < MAX_HEIGHT) {
         e.preventDefault();
         setHeightVh((h) =>
-          Math.min(MAX_HEIGHT, h + e.deltaY * SCROLL_SENSITIVITY),
+          Math.min(MAX_HEIGHT, h + e.deltaY * SCROLL_DOWN_SENSITIVITY),
         );
         return;
       }
@@ -55,7 +56,7 @@ export function Overlay({ href, onClose }: OverlayProps) {
       // Scrolling up: if content is at top, shrink the sheet
       if (scrollingUp && atTopRef.current) {
         e.preventDefault();
-        const newHeight = heightVh + e.deltaY * SCROLL_SENSITIVITY;
+        const newHeight = heightVh + e.deltaY * SCROLL_UP_SENSITIVITY;
         if (newHeight < MIN_HEIGHT) {
           startClose();
         } else {

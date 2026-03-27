@@ -87,7 +87,11 @@ export function Jobs() {
         TCP/Serial, and converting the communication layer of the orchestration
         system, hardware, and UI to MQTT. During my time at Lab2Fab, as the
         company has grown, I have been promoted to be involved in team
-        leadership and trusted to make large architectural decisions.
+        leadership and trusted to drive large architectural decisions. As a
+        trusted leader with comprehensive knowledge of our systems, I have also
+        been frequently called upon and deployed to support customers, solve
+        complex issues in the field, assist sales, and provide customers with
+        engineering support.
       </p>
     </article>
   );
